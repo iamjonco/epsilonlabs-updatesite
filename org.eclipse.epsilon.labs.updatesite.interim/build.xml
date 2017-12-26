@@ -1,6 +1,6 @@
 <project default="main">
 	
-	<target name="main" depends="categorise,compress,generate_site,refresh"/>
+	<target name="main" depends="categorise,compress,refresh"/>
 	
 	<target name="categorise">
 		<echo>Adding category information to repository</echo>
@@ -11,13 +11,13 @@
 	</target>
 	
 	<target name="compress">
-		<echo>Pack200ing JARS</echo>
+		<echo>Packing JARS</echo>
 		<p2.process.artifacts
 			pack="true"
 			normalize="true"
 			repositorypath="file:${basedir}"/>
 	</target>
-	
+	<!--
 	<target name="generate_site">
 		<echo>Generating index.html</echo>
 		
@@ -37,8 +37,7 @@
 			<model ref="Site"/>
 		</epsilon.egl>
 	</target>
-	
-	
+	-->
 	
 	<target name="clean" depends="delete,refresh" />
 	

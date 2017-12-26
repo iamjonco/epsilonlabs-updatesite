@@ -3,13 +3,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.eclipse.epsilon</groupId>
-    <artifactId>plugins</artifactId>
+    <groupId>org.eclipse.epsilon.labs</groupId>
+    <artifactId>org.eclipse.epsilon.labs.updatesite</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.eclipse.epsilon</groupId>
-  <artifactId>org.eclipse.epsilon.updatesite.interim</artifactId>
+  <groupId>org.eclipse.epsilon.labs</groupId>
+  <artifactId>org.eclipse.epsilon.labs.updatesite.interim</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>eclipse-update-site</packaging>
 
