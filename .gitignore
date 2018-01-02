@@ -1,2 +1,6 @@
-
+**/.project
+jars/**
+.settings/**
+.settings
 \.DS_Store
+epsilonlabs-repo/**

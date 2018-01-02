@@ -3,6 +3,6 @@
    <description name="Epsilon Labs Update Site">
       Updatesite for Epsilon Labs plugins.
    </description>
-   <feature url="features/org.eclipse.epsilon.emc.jdbc.feature_1.5.0.qualifier.jar" id="org.eclipse.epsilon.emc.jdbc.feature" version="1.5.0.qualifier"/>
-   <feature url="features/org.eclipse.epsilon.emc.jdbc.mysql.feature_1.5.0.qualifier.jar" id="org.eclipse.epsilon.emc.jdbc.mysql.feature" version="1.5.0.qualifier"/>
+   <feature url="features/org.eclipse.epsilon.emc.jdbc.feature_1.1.1.qualifier.jar" id="org.eclipse.epsilon.emc.jdbc.feature" version="1.1.0.qualifier"/>
+   <feature url="features/org.eclipse.epsilon.emc.jdbc.mysql.feature_1.1.1.qualifier.jar" id="org.eclipse.epsilon.emc.jdbc.mysql.feature" version="1.1.0.qualifier"/>
 </site>
