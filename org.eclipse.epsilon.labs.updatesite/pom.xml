@@ -9,7 +9,7 @@
   </parent>
 
   <groupId>org.eclipse.epsilon.labs</groupId>
-  <artifactId>org.eclipse.epsilon.labs.updatesite.interim</artifactId>
+  <artifactId>org.eclipse.epsilon.labs.updatesite</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>eclipse-update-site</packaging>
 

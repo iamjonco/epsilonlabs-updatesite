@@ -53,6 +53,6 @@
 	</target>
 	
 	<target name="refresh">
-		<eclipse.refreshLocal resource="org.eclipse.epsilon.updatesite" depth="infinite" />
+		<eclipse.refreshLocal resource="org.eclipse.epsilon.labs.updatesite.interim" depth="infinite" />
 	</target>
 </project>
