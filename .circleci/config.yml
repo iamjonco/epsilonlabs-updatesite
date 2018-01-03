@@ -1,24 +1,67 @@
 version: 2
 jobs:
-   build:
-     docker:
-       - image: circleci/openjdk:8-jdk
+    build:
+      docker:
+        - image: circleci/openjdk:8-jdk
     
-     working_directory: ~/repo  
+    working_directory: ~/repo  
 
-     environment:
+    environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
 
-     steps:
-       - checkout
-       
-       - run: 
-          # EMC-JDBC
+
+    steps:
+      - checkout
+      
+      - restore_cache:
+          keys:
+            - eclipse-platform
+
+      # Download Eclipse platform, this will be cached
+      - run:
+        curl https://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.7.2-201711300510/eclipse-SDK-4.7.2-linux-gtk-x86_64.tar.gz&r=1 | tar xvz
+      
+      # EMC-JDBC
+      - run:     
+          # curl the artifact list from the build
+          # wget each of the files
+          # java to create local p2 site
           command: |
             curl https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts$$DOWNLOAD_TOKEN | grep -o 'https://[^"]*' > artifacts.txt
-            <artifacts.txt xargs -P4 -I % wget %$$DOWNLOAD_TOKEN
-          #<artifacts.txt xargs mvn install:install-file -Dfile=${project.basedir}/NAME
+            <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 %$$DOWNLOAD_TOKEN -P -P ./epsilonlabs-artifacts/jdbc/
+            java -jar ./eclipse/plugins/org.eclipse.equinox.launcher_*.jar \
+              -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
+              -metadataRepository file:$(pwd)/repository/jdbc \
+              -artifactRepository file:$(pwd)/repository/jdbc \
+              -source ./epsilonlabs-artifacts/jdbc/ \
+              -configs gtk.linux.x86 \
+              -compress \
+              -publishArtifacts
 
-       - run: mvn package  
+      # EMC-PTCIM
+      #- run:     
+      #    # curl the artifact list from the build
+      #    # wget each of the files
+      #    # java to create local p2 site
+      #    command: |
+      #      curl https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts$$DOWNLOAD_TOKEN | grep -o 'https://[^"]*' > artifacts.txt
+      #      <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 %$$DOWNLOAD_TOKEN -P -P ./epsilonlabs-artifacts/jdbc/
+      #      java -jar ./eclipse/plugins/org.eclipse.equinox.launcher_*.jar \
+      #        -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
+      #        -metadataRepository file:$(pwd)/repository/jdbc \
+      #        -artifactRepository file:$(pwd)/repository/jdbc \
+      #        -source ./epsilonlabs-artifacts/jdbc/ \
+      #        -configs gtk.linux.x86 \
+      #        -compress \
+      #        -publishArtifacts
+
+
+
+       - run: mvn clean package
+
+       - save_cache:
+          key: eclipse-platform
+          paths:
+            - "~/repo/eclipse"
 

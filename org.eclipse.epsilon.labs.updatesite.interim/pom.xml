@@ -13,6 +13,10 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>eclipse-update-site</packaging>
 
+  <properties>
+    <main.basedir>${project.basedir}/..</main.basedir>
+  </properties>
+
   <build>
     <plugins>
       <plugin>

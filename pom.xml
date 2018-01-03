@@ -12,12 +12,14 @@
 
   <properties>
     <tycho.version>1.0.0</tycho.version>
+    <main.basedir>${project.basedir}</main.basedir>
   </properties>
   
   <repositories>
     <repository>
-      <id>epsilonlabs-repo</id>
-      <url>file:///${project.basedir}/epsilonlabs-repo</url>
+      <id>epsilonlabs-jdbc</id>
+      <url>file:///${main.basedir}/repository/jdbc</url>
+      <layout>p2</layout>
     </repository>
     <repository>
       <id>epsilonInterim</id>
@@ -32,7 +34,7 @@
   </repositories>
 
   <modules>
-   <!--<module>org.eclipse.epsilon.labs.updatesite.interim</module>-->
+   <module>org.eclipse.epsilon.labs.updatesite.interim</module>
    <!--module>org.eclipse.epsilon.labs.updatesite</module-->
   </modules>
 
