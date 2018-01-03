@@ -92,8 +92,8 @@ jobs:
             root: ws
             # Must be relative path from root
             paths:
-              - ~/repo/org.eclipse.epsilon.labs.updatesite.interim
-              - ~/repo/pushToBintray.sh
+              - ../org.eclipse.epsilon.labs.updatesite.interim
+              - ../pushToBintray.sh
 
         - save_cache:
             key: eclipse-platform-{{ checksum "org.eclipse.epsilon.labs.updatesite.interim/site.xml" }}
