@@ -15,10 +15,10 @@
   </properties>
   
   <repositories>
-    <repository>
+    <!--repository>
       <id>epsilonlabs-repo</id>
       <url>file:///${project.basedir}/epsilonlabs-repo</url>
-    </repository>
+    </repository-->
     <repository>
       <id>epsilonInterim</id>
       <url>http://download.eclipse.org/epsilon/interim/</url>
@@ -36,15 +36,6 @@
    <!--module>org.eclipse.epsilon.labs.updatesite</module-->
   </modules>
 
-  <dependencies>
-    <dependency>
-      <artifactId>org.eclipse.epsilon.emc.jdbc.feature</artifactId>
-      <groupId>org.eclipse.epsilon.labs</groupId>
-      <version>1.1.1</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
-
   <build>
     
     <plugins>
@@ -61,6 +52,7 @@
 	      <artifactId>target-platform-configuration</artifactId>
         <version>${tycho.version}</version>
 	      <configuration>
+          <pomDependencies>consider</pomDependencies>
           <!--target>
             <artifact>
 	          <groupId>${project.groupId}</groupId>

@@ -13,12 +13,12 @@ jobs:
      steps:
        - checkout
        
+       # Install dependencies
        - run: 
           # EMC-JDBC
           command: |
             curl https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts$$DOWNLOAD_TOKEN | grep -o 'https://[^"]*' > artifacts.txt
             <artifacts.txt xargs -P4 -I % wget %$$DOWNLOAD_TOKEN
-          #<artifacts.txt xargs mvn install:install-file -Dfile=${project.basedir}/NAME
+            <artifacts.txt xargs -P4 -I % basename % .jar | $(sed 's/\([^-]*\)-\(.*\)/ mvn deploy:deploy-file -Dfile=\1.jar -DrepositoryId="epsilonlabs-repo" -Durl=file:.\/epsilonlabs-repo\/ -DartifactId="\1" -DgroupId="org.eclipse.epsilon.labs" -Dversion="\2-SNAPSHOT"/')
 
-       - run: mvn package  
-
+       - run: mvn package 
