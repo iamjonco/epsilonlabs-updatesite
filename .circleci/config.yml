@@ -102,12 +102,12 @@ jobs:
 
     deploy-job:
       <<: *defaults
-
-      - attach_workspace:
-          # Must be absolute path or relative path from working_directory
-          at: ws
       
       steps:
+        - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ws
+          
         - run: sh ws/pushToBintray.sh arcanefoam $BINTRAY_API_KEY epsilonlabsdemo EpsilonLabs-Updatesite epsilonlabs-updatesite 1.3 ws/org.eclipse.epsilon.labs.updatesite.interim/target/site
 
 workflows:
