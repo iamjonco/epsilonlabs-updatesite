@@ -56,7 +56,17 @@ jobs:
       #        -compress \
       #        -publishArtifacts
 
-
+       - run: 
+        command: |
+          find . -type f -name "site.xml" | xargs -I % cat % > site.xml
+          grep -vE "<site>|</site>|<?xml" site.xml > tmp.xml
+          echo "</site>" >> tmp.xml
+          rm site.xml
+          echo "<?xml version="1.0" encoding="UTF-8"?>" >> site.xml
+          echo "<site>" >> site.xml
+          cat tmp.xml >> site.xml
+          rm tmp.xml
+          mv site.xml org.eclipse.epsilon.labs.updatesite.interim/site.xml
 
        - run: mvn clean package
 
