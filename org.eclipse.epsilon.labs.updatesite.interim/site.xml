@@ -2,4 +2,18 @@
 <!-- This file will be automatically populated by the CI-->
 <!-- Local updatesites use eclipse-SDK-4.7.2-linux-gtk-x86_64 (R-4.7.2-201711300510) -->
 <site>
+	<feature url="features/org.eclipse.epsilon.emc.jdbc.feature_1.1.3.qualifier.jar" id="org.eclipse.epsilon.emc.jdbc.feature" version="1.1.3.qualifier">
+      <category name="JDBC"/>
+   </feature>
+   <feature url="features/org.eclipse.epsilon.emc.jdbc.mysql.feature_1.1.3.qualifier.jar" id="org.eclipse.epsilon.emc.jdbc.mysql.feature" version="1.1.3.qualifier">
+      <category name="JDBC"/>
+   </feature>
+   <feature url="features/org.eclipse.epsilon.emc.jdbc.mysql.dt.feature_1.1.3.qualifier.jar" id="org.eclipse.epsilon.emc.jdbc.mysql.dt.feature" version="1.1.3.qualifier">
+      <category name="JDBC"/>
+   </feature>
+   <category-def name="JDBC" label="JDBC">
+      <description>
+         JDBC Drivers
+      </description>
+   </category-def>
 </site>
