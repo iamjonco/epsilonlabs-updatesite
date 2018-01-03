@@ -32,7 +32,6 @@ jobs:
             # use java to create local p2 site
             command: |
               curl "https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts?circle-token=$DOWNLOAD_TOKEN" | grep -o 'https://[^"]*' > artifacts.txt
-              cat artifacts.txt
               <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 "%?circle-token=$DOWNLOAD_TOKEN" -P ./epsilonlabs-artifacts/jdbc/
               java -jar ./eclipse/plugins/org.eclipse.equinox.launcher_*.jar \
                 -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
@@ -65,7 +64,11 @@ jobs:
         - run: 
             command: |
               find ./epsilonlabs-artifacts -type f -name "site.xml" | xargs -I % cat % > site.xml
+              echo "FIND"
+              cat site.xml
               grep -vE "<site>|</site>|<?xml" site.xml > tmp.xml
+              echo "grep"
+              cat tmp.xml
               echo "</site>" >> tmp.xml
               rm site.xml
               echo "<?xml version="1.0" encoding="UTF-8"?>" >> site.xml
