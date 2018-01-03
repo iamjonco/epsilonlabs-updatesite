@@ -4,74 +4,96 @@ jobs:
       docker:
         - image: circleci/openjdk:8-jdk
     
-    working_directory: ~/repo  
+      working_directory: ~/repo  
 
-    environment:
-      # Customize the JVM maximum heap limit
-      MAVEN_OPTS: -Xmx3200m
+      environment:
+        # Customize the JVM maximum heap limit
+        MAVEN_OPTS: -Xmx3200m
 
 
-    steps:
-      - checkout
-      
-      - restore_cache:
-          keys:
-            - eclipse-platform
+      steps:
+        - checkout
+        
+        - restore_cache:
+            keys:
+              - eclipse-platform
 
-      # Download Eclipse platform, this will be cached
-      - run:
-        curl https://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.7.2-201711300510/eclipse-SDK-4.7.2-linux-gtk-x86_64.tar.gz&r=1 | tar xvz
-      
-      # EMC-JDBC
-      - run:     
-          # curl the artifact list from the build
-          # wget each of the files
-          # java to create local p2 site
+        # Download Eclipse platform, this will be cached
+        - run:
+          curl https://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.7.2-201711300510/eclipse-SDK-4.7.2-linux-gtk-x86_64.tar.gz&r=1 | tar xvz
+        
+        # EMC-JDBC
+        - run:     
+            # curl the artifact list from the build
+            # wget each of the files
+            # java to create local p2 site
+            command: |
+              curl https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts$$DOWNLOAD_TOKEN | grep -o 'https://[^"]*' > artifacts.txt
+              <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 %$$DOWNLOAD_TOKEN -P -P ./epsilonlabs-artifacts/jdbc/
+              java -jar ./eclipse/plugins/org.eclipse.equinox.launcher_*.jar \
+                -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
+                -metadataRepository file:$(pwd)/repository/jdbc \
+                -artifactRepository file:$(pwd)/repository/jdbc \
+                -source ./epsilonlabs-artifacts/jdbc/ \
+                -configs gtk.linux.x86 \
+                -compress \
+                -publishArtifacts
+
+        # EMC-PTCIM
+        #- run:     
+        #    # curl the artifact list from the build
+        #    # wget each of the files
+        #    # java to create local p2 site
+        #    command: |
+        #      curl https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts$$DOWNLOAD_TOKEN | grep -o 'https://[^"]*' > artifacts.txt
+        #      <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 %$$DOWNLOAD_TOKEN -P -P ./epsilonlabs-artifacts/jdbc/
+        #      java -jar ./eclipse/plugins/org.eclipse.equinox.launcher_*.jar \
+        #        -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
+        #        -metadataRepository file:$(pwd)/repository/jdbc \
+        #        -artifactRepository file:$(pwd)/repository/jdbc \
+        #        -source ./epsilonlabs-artifacts/jdbc/ \
+        #        -configs gtk.linux.x86 \
+        #        -compress \
+        #        -publishArtifacts
+
+
+        # Crate interim updatesite site.xml dynamically
+         - run: 
           command: |
-            curl https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts$$DOWNLOAD_TOKEN | grep -o 'https://[^"]*' > artifacts.txt
-            <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 %$$DOWNLOAD_TOKEN -P -P ./epsilonlabs-artifacts/jdbc/
-            java -jar ./eclipse/plugins/org.eclipse.equinox.launcher_*.jar \
-              -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
-              -metadataRepository file:$(pwd)/repository/jdbc \
-              -artifactRepository file:$(pwd)/repository/jdbc \
-              -source ./epsilonlabs-artifacts/jdbc/ \
-              -configs gtk.linux.x86 \
-              -compress \
-              -publishArtifacts
+            find ./epsilonlabs-artifacts -type f -name "site.xml" | xargs -I % cat % > site.xml
+            grep -vE "<site>|</site>|<?xml" site.xml > tmp.xml
+            echo "</site>" >> tmp.xml
+            rm site.xml
+            echo "<?xml version="1.0" encoding="UTF-8"?>" >> site.xml
+            echo "<site>" >> site.xml
+            cat tmp.xml >> site.xml
+            rm tmp.xml
+            mv site.xml org.eclipse.epsilon.labs.updatesite.interim/site.xml
 
-      # EMC-PTCIM
-      #- run:     
-      #    # curl the artifact list from the build
-      #    # wget each of the files
-      #    # java to create local p2 site
-      #    command: |
-      #      curl https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts$$DOWNLOAD_TOKEN | grep -o 'https://[^"]*' > artifacts.txt
-      #      <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 %$$DOWNLOAD_TOKEN -P -P ./epsilonlabs-artifacts/jdbc/
-      #      java -jar ./eclipse/plugins/org.eclipse.equinox.launcher_*.jar \
-      #        -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
-      #        -metadataRepository file:$(pwd)/repository/jdbc \
-      #        -artifactRepository file:$(pwd)/repository/jdbc \
-      #        -source ./epsilonlabs-artifacts/jdbc/ \
-      #        -configs gtk.linux.x86 \
-      #        -compress \
-      #        -publishArtifacts
+         - run: mvn clean package
 
-       - run: 
-        command: |
-          find . -type f -name "site.xml" | xargs -I % cat % > site.xml
-          grep -vE "<site>|</site>|<?xml" site.xml > tmp.xml
-          echo "</site>" >> tmp.xml
-          rm site.xml
-          echo "<?xml version="1.0" encoding="UTF-8"?>" >> site.xml
-          echo "<site>" >> site.xml
-          cat tmp.xml >> site.xml
-          rm tmp.xml
-          mv site.xml org.eclipse.epsilon.labs.updatesite.interim/site.xml
+         - save_cache:
+            key: eclipse-platform
+            paths:
+              - "~/repo/eclipse"
 
-       - run: mvn clean package
+  deployment:
+    production:
+      commands:
+        - sh ./pushToBintray.sh arcanefoam $BINTRAY_API_KEY epsilonlabsdemo EpsilonLabs-Updatesite epsilonlabs-updatesite 1.3 org.eclipse.epsilon.labs.updatesite.interim/target/site
 
-       - save_cache:
-          key: eclipse-platform
-          paths:
-            - "~/repo/eclipse"
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deployment:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+            
+
+
 
