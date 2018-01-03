@@ -24,9 +24,9 @@ jobs:
         
         # EMC-JDBC
         - run:     
-            # curl the artifact list from the build
-            # wget each of the files
-            # java to create local p2 site
+            # curl the artifacts list from the build
+            # wget each of the files (jars)
+            # use java to create local p2 site
             command: |
               curl https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts$$DOWNLOAD_TOKEN | grep -o 'https://[^"]*' > artifacts.txt
               <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 %$$DOWNLOAD_TOKEN -P -P ./epsilonlabs-artifacts/jdbc/
@@ -59,16 +59,16 @@ jobs:
 
         # Crate interim updatesite site.xml dynamically
         - run: 
-          command: |
-            find ./epsilonlabs-artifacts -type f -name "site.xml" | xargs -I % cat % > site.xml
-            grep -vE "<site>|</site>|<?xml" site.xml > tmp.xml
-            echo "</site>" >> tmp.xml
-            rm site.xml
-            echo "<?xml version="1.0" encoding="UTF-8"?>" >> site.xml
-            echo "<site>" >> site.xml
-            cat tmp.xml >> site.xml
-            rm tmp.xml
-            mv site.xml org.eclipse.epsilon.labs.updatesite.interim/site.xml
+            command: |
+              find ./epsilonlabs-artifacts -type f -name "site.xml" | xargs -I % cat % > site.xml
+              grep -vE "<site>|</site>|<?xml" site.xml > tmp.xml
+              echo "</site>" >> tmp.xml
+              rm site.xml
+              echo "<?xml version="1.0" encoding="UTF-8"?>" >> site.xml
+              echo "<site>" >> site.xml
+              cat tmp.xml >> site.xml
+              rm tmp.xml
+              mv site.xml org.eclipse.epsilon.labs.updatesite.interim/site.xml
 
         - run: mvn clean package
 
