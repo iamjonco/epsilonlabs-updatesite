@@ -32,7 +32,8 @@ jobs:
             # use java to create local p2 site
             command: |
               curl https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts$$DOWNLOAD_TOKEN | grep -o 'https://[^"]*' > artifacts.txt
-              <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 %$$DOWNLOAD_TOKEN -P -P ./epsilonlabs-artifacts/jdbc/
+              cat artifacts.txt
+              <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 %$$DOWNLOAD_TOKEN -P ./epsilonlabs-artifacts/jdbc/
               java -jar ./eclipse/plugins/org.eclipse.equinox.launcher_*.jar \
                 -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
                 -metadataRepository file:$(pwd)/repository/jdbc \
