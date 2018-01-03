@@ -91,7 +91,7 @@ jobs:
 
     deploy-job:
       docker:
-        - image: my-image
+        - image: circleci/openjdk:8-jdk
       
       working_directory: ~/repo  
       
