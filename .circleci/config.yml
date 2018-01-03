@@ -77,10 +77,10 @@ jobs:
             paths:
               - eclipse
 
-  deployment:
-    production:
-      commands:
-        - sh ./pushToBintray.sh arcanefoam $BINTRAY_API_KEY epsilonlabsdemo EpsilonLabs-Updatesite epsilonlabs-updatesite 1.3 org.eclipse.epsilon.labs.updatesite.interim/target/site
+    deployment:
+      production:
+        commands:
+          - sh ./pushToBintray.sh arcanefoam $BINTRAY_API_KEY epsilonlabsdemo EpsilonLabs-Updatesite epsilonlabs-updatesite 1.3 org.eclipse.epsilon.labs.updatesite.interim/target/site
 
 workflows:
   version: 2
