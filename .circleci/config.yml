@@ -20,7 +20,10 @@ jobs:
               - eclipse-platform-
 
         # Download Eclipse platform, this will be cached
-        - run: curl -O http://ftp.jaist.ac.jp/pub/eclipse/technology/epp/downloads/release/oxygen/R/eclipse-java-oxygen-R-linux-gtk-x86_64.tar.gz | tar xvz
+        - run:
+              command: |
+                curl -O http://ftp.jaist.ac.jp/pub/eclipse/technology/epp/downloads/release/oxygen/R/eclipse-java-oxygen-R-linux-gtk-x86_64.tar.gz
+                tar -zxvf eclipse-java-oxygen-R-linux-gtk*.tar.gz
         
         # EMC-JDBC
         - run:     
