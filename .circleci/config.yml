@@ -74,7 +74,7 @@ jobs:
         - save_cache:
             key: eclipse-platform
             paths:
-              - ~/repo/eclipse
+              - eclipse
 
   deployment:
     production:
