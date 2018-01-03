@@ -85,40 +85,40 @@ jobs:
 
         - run: mvn clean package
 
-        - persist_to_workspace:
-            # Must be an absolute path, or relative path from working_directory
-            root: ~/repo
-            # Must be relative path from root
-            paths:
-              - org.eclipse.epsilon.labs.updatesite.interim
-              - pushToBintray.sh
+        #- persist_to_workspace:
+        #    # Must be an absolute path, or relative path from working_directory
+        #    root: ~/repo
+        #    # Must be relative path from root
+        #    paths:
+        #      - org.eclipse.epsilon.labs.updatesite.interim
+        #      - pushToBintray.sh
 
         - save_cache:
             key: eclipse-platform-{{ checksum "org.eclipse.epsilon.labs.updatesite.interim/site.xml" }}
             paths:
               - eclipse
 
-    deploy-job:
-      <<: *defaults
-      
-      steps:
-        - attach_workspace:
-            # Must be absolute path or relative path from working_directory
-            at: ~/repo
-
         - run: ./pushToBintray.sh arcanefoam $BINTRAY_API_KEY epsilonlabsdemo EpsilonLabs-Updatesite epsilonlabs-updatesite 1.3 org.eclipse.epsilon.labs.updatesite.interim/target/site
 
-workflows:
-  version: 2
-  build-deploy:
-    jobs:
-      - build-job
-      - deploy-job:
-          requires:
-            - build-job
-          filters:
-            branches:
-              only: master
+#    deploy-job:
+#      <<: *defaults
+#      
+#      steps:
+#        - attach_workspace:
+#            # Must be absolute path or relative path from working_directory
+#            at: ~/repo
+
+#workflows:
+#  version: 2
+#  build-deploy:
+#    jobs:
+#      - build-job
+#      - deploy-job:
+#          requires:
+#            - build-job
+#          filters:
+#            branches:
+#              only: master
             
 
 
