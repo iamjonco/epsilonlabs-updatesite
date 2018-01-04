@@ -79,7 +79,7 @@ jobs:
               echo -e "\nFINAL"
               cat site.xml
               rm tmp.xml
-              mv site.xml org.eclipse.epsilon.labs.updatesite.interim/site.xml
+              mv site.xml ~/repo/org.eclipse.epsilon.labs.updatesite.interim/site.xml
 
         - run: mvn clean package
 
