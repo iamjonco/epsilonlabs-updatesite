@@ -72,13 +72,12 @@ jobs:
               cat tmp.xml
               echo "</site>" >> tmp.xml
               rm site.xml
-              echo "<?xml version="1.0" encoding="UTF-8"?>" >> site.xml
+              echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" >> site.xml
               echo "<site>" >> site.xml
               cat tmp.xml
               cat tmp.xml >> site.xml
               echo -e "\nFINAL"
               rm tmp.xml
-              cat ~/repo/org.eclipse.epsilon.labs.updatesite.interim/site.xml
               mv site.xml ~/repo/org.eclipse.epsilon.labs.updatesite.interim/site.xml
               cat ~/repo/org.eclipse.epsilon.labs.updatesite.interim/site.xml
 
