@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- This file will be automatically populated by the CI-->
+<!-- Local updatesites use eclipse-SDK-4.7.2-linux-gtk-x86_64 (R-4.7.2-201711300510) -->
 <site>
-   <description name="Epsilon Labs Update Site">
-      Updatesite for Epsilon Labs plugins.
-   </description>
-   <feature url="features/org.eclipse.epsilon.emc.jdbc.feature_1.1.1.qualifier.jar" id="org.eclipse.epsilon.emc.jdbc.feature" version="1.1.0.qualifier"/>
-   <feature url="features/org.eclipse.epsilon.emc.jdbc.mysql.feature_1.1.1.qualifier.jar" id="org.eclipse.epsilon.emc.jdbc.mysql.feature" version="1.1.0.qualifier"/>
 </site>

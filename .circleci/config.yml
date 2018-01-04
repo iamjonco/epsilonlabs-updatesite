@@ -62,26 +62,24 @@ jobs:
 
 
         # Crate interim updatesite site.xml dynamically
-        #- run: 
-        #    command: |
-        #      find ./epsilonlabs-artifacts -type f -name "site.xml" | xargs -I % cat % > site.xml
-        #      echo -e "\nFIND"
-        #      cat site.xml
-        #      grep -vE "<site>|</site>|<?xml" site.xml > tmp.xml
-        #      echo -e "\nGREP"
-        #      cat tmp.xml
-        #      echo "</site>" >> tmp.xml
-        #      rm site.xml
-        #      echo "<?xml version="1.0" encoding="UTF-8"?>" >> site.xml
-        #      echo "<site>" >> site.xml
-        #      echo -e "\nSTART"
-        #      cat tmp.xml
-        #      echo -e "\nINSERT"
-        #      cat tmp.xml >> site.xml
-        #      echo -e "\nCOMPLETE"
-        #      cat site.xml
-        #      rm tmp.xml
-        #      mv site.xml org.eclipse.epsilon.labs.updatesite.interim/site.xml
+        - run: 
+            command: |
+              find ./epsilonlabs-artifacts -type f -name "site.xml" | xargs -I % cat % > site.xml
+              echo -e "\nDOWNLOADED AND MERGED"
+              cat site.xml
+              grep -vE "<site>|</site>|<?xml" site.xml > tmp.xml
+              echo -e "\nREMOVED KEYWORDS"
+              cat tmp.xml
+              echo "</site>" >> tmp.xml
+              rm site.xml
+              echo "<?xml version="1.0" encoding="UTF-8"?>" >> site.xml
+              echo "<site>" >> site.xml
+              cat tmp.xml
+              cat tmp.xml >> site.xml
+              echo -e "\nFINAL"
+              cat site.xml
+              rm tmp.xml
+              mv site.xml org.eclipse.epsilon.labs.updatesite.interim/site.xml
 
         - run: mvn clean package
 
