@@ -17,7 +17,7 @@ jobs:
         
         - restore_cache:
             keys:
-              - eclipse-platform-{{ checksum "org.eclipse.epsilon.labs.updatesite.interim/site.xml" }}
+              - eclipse-platform-{{ checksum "org.eclipse.epsilon.labs.updatesite/site.xml" }}
               - eclipse-platform-
 
         # Download Eclipse platform, this will be cached
@@ -48,18 +48,18 @@ jobs:
             path: ~/repo/org.eclipse.epsilon.labs.updatesite/site.xml
             destination: site.xml
 
-        - run: mvn clean package
+        - run: mvn clean dependency:go-offline package
 
         - save_cache:
-            key: eclipse-platform-{{ checksum "org.eclipse.epsilon.labs.updatesite.interim/site.xml" }}
+            key: eclipse-platform-{{ checksum "org.eclipse.epsilon.labs.updatesite/site.xml" }}
             paths:
               - eclipse
 
         # Deploy to bintray 
         - run: 
             command: |
-              version = mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version -f ~/repo/org.eclipse.epsilon.labs.updatesite/pom.xml
-              ./pushToBintray.sh $BINTRAY_USER $BINTRAY_API_KEY epsilonlabs updates updatesite $version org.eclipse.epsilon.labs.updatesite/target/site
+              VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version -f ~/repo/org.eclipse.epsilon.labs.updatesite/pom.xml)
+              ./pushToBintray.sh $BINTRAY_USER $BINTRAY_API_KEY epsilonlabs updates updatesite $VERSION org.eclipse.epsilon.labs.updatesite/target/site
 
 
 
