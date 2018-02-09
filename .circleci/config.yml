@@ -58,8 +58,8 @@ jobs:
         # Deploy to bintray 
         - run: 
             command: |
-            version = mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version -f ~/repo/org.eclipse.epsilon.labs.updatesite/pom.xml
-            ./pushToBintray.sh $BINTRAY_USER $BINTRAY_API_KEY epsilonlabs updates updatesite 1.$version org.eclipse.epsilon.labs.updatesite/target/site
+              version = mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version -f ~/repo/org.eclipse.epsilon.labs.updatesite/pom.xml
+              ./pushToBintray.sh $BINTRAY_USER $BINTRAY_API_KEY epsilonlabs updates updatesite $version org.eclipse.epsilon.labs.updatesite/target/site
 
 
 
