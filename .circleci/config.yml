@@ -28,8 +28,7 @@ jobs:
         
         # Each entry in projects.txt is used to fetch the persisted artifacts and publish them as features
         # and bundles
-        - run:
-            <projects.txt xargs -n1 | while read f; read g; do ./publishFeatures.sh $f $g $DOWNLOAD_ARTIFACTS; done
+        - run: <projects.txt xargs -n1 | while read f; read g; do ./publishFeatures.sh $f $g $DOWNLOAD_ARTIFACTS; done
 
         # Crate interim updatesite site.xml dynamically
         - run: 
@@ -58,9 +57,9 @@ jobs:
 
         # Deploy to bintray 
         - run: 
-            command |
-            version = mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version
-            ./pushToBintray.sh $BINTRAY_USER $BINTRAY_API_KEY epsilonlabs updates updatesite 1.$CIRCLE_BUILD_NUM org.eclipse.epsilon.labs.updatesite/target/site
+            command: |
+            version = mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version -f ~/repo/org.eclipse.epsilon.labs.updatesite/pom.xml
+            ./pushToBintray.sh $BINTRAY_USER $BINTRAY_API_KEY epsilonlabs updates updatesite 1.$version org.eclipse.epsilon.labs.updatesite/target/site
 
 
 
