@@ -45,8 +45,8 @@ jobs:
               
         # Persit site.xml
         - store_artifacts:
-          path: ~/repo/org.eclipse.epsilon.labs.updatesite/site.xml
-          destination: site.xml
+            path: ~/repo/org.eclipse.epsilon.labs.updatesite/site.xml
+            destination: site.xml
 
         - run: mvn clean package
 
