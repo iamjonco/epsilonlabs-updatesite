@@ -22,103 +22,47 @@ jobs:
 
         # Download Eclipse platform, this will be cached
         - run:
-              command: |
-                curl -O http://ftp.jaist.ac.jp/pub/eclipse/technology/epp/downloads/release/oxygen/R/eclipse-java-oxygen-R-linux-gtk-x86_64.tar.gz
-                tar -zxvf eclipse-java-oxygen-R-linux-gtk*.tar.gz
-        
-        # EMC-JDBC
-        - run:     
-            # curl the artifacts list from the build
-            # wget each of the files (jars)
-            # use java to create local p2 site
             command: |
-              curl "https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts?circle-token=$DOWNLOAD_ARTIFACTS" | grep -o 'https://[^"]*' > artifacts.txt
-              <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 % -P ./epsilonlabs-artifacts/jdbc/
-              java -jar ./eclipse/plugins/org.eclipse.equinox.launcher_*.jar \
-                -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
-                -metadataRepository file:$(pwd)/repository/jdbc \
-                -artifactRepository file:$(pwd)/repository/jdbc \
-                -source ./epsilonlabs-artifacts/jdbc/ \
-                -configs gtk.linux.x86 \
-                -compress \
-                -publishArtifacts
-
-        # EMC-PTCIM
-        #- run:     
-        #    # curl the artifact list from the build
-        #    # wget each of the files
-        #    # java to create local p2 site
-        #    command: |
-        #      curl https://circleci.com/api/v1.1/project/github/epsilonlabs/emc-jdbc/latest/artifacts$$DOWNLOAD_ARTIFACTS | grep -o 'https://[^"]*' > artifacts.txt
-        #      <artifacts.txt xargs -P4 -I % wget -x -nH --cut-dirs=1 %$$DOWNLOAD_ARTIFACTS -P -P ./epsilonlabs-artifacts/jdbc/
-        #      java -jar ./eclipse/plugins/org.eclipse.equinox.launcher_*.jar \
-        #        -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher \
-        #        -metadataRepository file:$(pwd)/repository/jdbc \
-        #        -artifactRepository file:$(pwd)/repository/jdbc \
-        #        -source ./epsilonlabs-artifacts/jdbc/ \
-        #        -configs gtk.linux.x86 \
-        #        -compress \
-        #        -publishArtifacts
-
+              curl -O http://ftp.jaist.ac.jp/pub/eclipse/technology/epp/downloads/release/oxygen/R/eclipse-java-oxygen-R-linux-gtk-x86_64.tar.gz
+              tar -zxvf eclipse-java-oxygen-R-linux-gtk*.tar.gz
+        
+        # Each entry in projects.txt is used to fetch the persisted artifacts and publish them as features
+        # and bundles
+        - run:
+            <projects.txt xargs -n1 | while read f; read g; do ./publishFeatures.sh $f $g $DOWNLOAD_ARTIFACTS; done
 
         # Crate interim updatesite site.xml dynamically
         - run: 
             command: |
               find ./epsilonlabs-artifacts -type f -name "site.xml" | xargs -I % cat % > site.xml
-              echo -e "\nDOWNLOADED AND MERGED"
-              cat site.xml
               grep -vE "<site>|</site>|<?xml" site.xml > tmp.xml
-              echo -e "\nREMOVED KEYWORDS"
-              cat tmp.xml
               echo "</site>" >> tmp.xml
               rm site.xml
               echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" >> site.xml
               echo "<site>" >> site.xml
-              cat tmp.xml
               cat tmp.xml >> site.xml
-              echo -e "\nFINAL"
               rm tmp.xml
-              mv site.xml ~/repo/org.eclipse.epsilon.labs.updatesite.interim/site.xml
-              cat ~/repo/org.eclipse.epsilon.labs.updatesite.interim/site.xml
+              mv site.xml ~/repo/org.eclipse.epsilon.labs.updatesite/site.xml
+              
+        # Persit site.xml
+        - store_artifacts:
+          path: ~/repo/org.eclipse.epsilon.labs.updatesite/site.xml
+          destination: site.xml
 
         - run: mvn clean package
-
-        #- persist_to_workspace:
-        #    # Must be an absolute path, or relative path from working_directory
-        #    root: ~/repo
-        #    # Must be relative path from root
-        #    paths:
-        #      - org.eclipse.epsilon.labs.updatesite.interim
-        #      - pushToBintray.sh
 
         - save_cache:
             key: eclipse-platform-{{ checksum "org.eclipse.epsilon.labs.updatesite.interim/site.xml" }}
             paths:
               - eclipse
 
-        # Push to bintray 
-        - run: ./pushToBintray.sh $BINTRAY_USER $BINTRAY_API_KEY epsilonlabs updates updatesite 1.$CIRCLE_BUILD_NUM org.eclipse.epsilon.labs.updatesite.interim/target/site
+        # Deploy to bintray 
+        - run: 
+            command |
+            version = mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version
+            ./pushToBintray.sh $BINTRAY_USER $BINTRAY_API_KEY epsilonlabs updates updatesite 1.$CIRCLE_BUILD_NUM org.eclipse.epsilon.labs.updatesite/target/site
 
-#    deploy-job:
-#      <<: *defaults
-#      
-#      steps:
-#        - attach_workspace:
-#            # Must be absolute path or relative path from working_directory
-#            at: ~/repo
 
-#workflows:
-#  version: 2
-#  build-deploy:
-#    jobs:
-#      - build-job
-#      - deploy-job:
-#          requires:
-#            - build-job
-#          filters:
-#            branches:
-#              only: master
-            
 
 
 

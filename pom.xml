@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
    
     <groupId>org.eclipse.epsilon.labs</groupId>
-    <artifactId>org.eclipse.epsilon.labs.parent</artifactId>
+    <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Parent</name>
@@ -15,8 +15,8 @@
     
     <repositories>
         <repository>
-            <id>epsilonlabs-jdbc</id>
-            <url>file:///${main.basedir}/repository/jdbc</url>
+            <id>epsilonlabs</id>
+            <url>file:///${main.basedir}/repository/emc-jdbc</url>
             <layout>p2</layout>
         </repository>
         <repository>
@@ -32,8 +32,7 @@
     </repositories>
    
     <modules>
-        <module>org.eclipse.epsilon.labs.updatesite.interim</module>
-        <!--module>org.eclipse.epsilon.labs.updatesite</module-->
+        <module>org.eclipse.epsilon.labs.updatesite</module>
     </modules>
     
     <build>

@@ -43,3 +43,13 @@ local.properties
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+eclipse/
+
+epsilonlabs-artifacts/
+
+*_artifacts.txt
+
+org\.eclipse\.epsilon\.labs\.updatesite/target/
+
+org\.eclipse\.epsilon\.labs\.updatesite/site\.xml
