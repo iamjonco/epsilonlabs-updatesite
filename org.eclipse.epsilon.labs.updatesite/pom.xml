@@ -9,7 +9,7 @@
     </parent>
     
     <artifactId>org.eclipse.epsilon.labs.updatesite</artifactId>
-    <version>1.1.0</version>
+    <version><version>1.2.0</version><!-- PACKAGE VERSION HERE --></version>
     <packaging>eclipse-update-site</packaging>
     
     <properties>
