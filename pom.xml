@@ -15,8 +15,13 @@
     
     <repositories>
         <repository>
-            <id>epsilonlabs</id>
+            <id>epsilonlabs-jdbc</id>
             <url>file:///${main.basedir}/repository/emc-jdbc</url>
+            <layout>p2</layout>
+        </repository>
+        <repository>
+            <id>epsilonlabs-ptcim</id>
+            <url>file:///${main.basedir}/repository/emc-ptcim</url>
             <layout>p2</layout>
         </repository>
         <repository>
